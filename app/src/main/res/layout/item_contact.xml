@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
-                android:textColor="@color/blackText"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 tools:text="Caroline Wall"/>
 
@@ -28,7 +28,7 @@
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/blackText"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 tools:text="+7 (865) 492-2461"/>
 
@@ -38,7 +38,7 @@
             android:id="@+id/height"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackText"
+            android:textColor="@color/black"
             android:textSize="14sp"
             tools:text="180.45"/>
 
