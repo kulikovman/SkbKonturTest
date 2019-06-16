@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/search_view_container"
         tools:context=".ui.SearchView">
 
     <data>
@@ -18,7 +19,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent">
+        android:background="@color/colorAccent"
+        android:elevation="4dp">
 
         <EditText
             android:id="@+id/search"
@@ -28,7 +30,7 @@
             android:background="@drawable/search_field_background"
             android:hint="@string/search"
             android:paddingStart="60dp"
-            tools:ignore="RtlSymmetry"/>
+            android:paddingEnd="60dp"/>
 
         <ImageView
             android:layout_width="wrap_content"
