@@ -47,4 +47,10 @@ public class SearchFragment extends Fragment {
     }
 
 
+
+    public void clearSearchField() {
+
+    }
+
+
 }
