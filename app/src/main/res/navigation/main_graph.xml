@@ -18,9 +18,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
+
     <fragment
         android:id="@+id/infoFragment"
         android:name="ru.kulikovman.skbkonturtest.InfoFragment"
         android:label="fragment_info"
         tools:layout="@layout/fragment_info"/>
+
 </navigation>

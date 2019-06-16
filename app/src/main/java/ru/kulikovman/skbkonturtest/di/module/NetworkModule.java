@@ -5,8 +5,6 @@ import android.util.Log;
 
 import java.io.File;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
@@ -15,22 +13,21 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.kulikovman.skbkonturtest.BuildConfig;
-import ru.kulikovman.skbkonturtest.api.TestApi;
+import ru.kulikovman.skbkonturtest.api.ApiInterface;
 
 @Module(includes = ContextModule.class)
 public class NetworkModule {
 
-    @Singleton
     @Provides
-    public TestApi testApi(Retrofit retrofit) {
-        return retrofit.create(TestApi.class);
+    public ApiInterface apiInterface(Retrofit retrofit) {
+        return retrofit.create(ApiInterface.class);
     }
 
     @Provides
     public Retrofit retrofit(OkHttpClient okHttpClient, GsonConverterFactory gsonConverterFactory) {
         return new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("https://github.com/SkbkonturMobile/mobile-test-droid/blob/master/json/")
+                .baseUrl("https://raw.githubusercontent.com/SkbkonturMobile/mobile-test-droid/master/json/")
                 .addConverterFactory(gsonConverterFactory)
                 .build();
     }
