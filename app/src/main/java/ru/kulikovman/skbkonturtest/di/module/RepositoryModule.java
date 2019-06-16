@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.kulikovman.skbkonturtest.api.ApiInterface;
+import ru.kulikovman.skbkonturtest.api.TestApi;
 import ru.kulikovman.skbkonturtest.db.AppDatabase;
 import ru.kulikovman.skbkonturtest.repository.DataRepository;
 import ru.kulikovman.skbkonturtest.repository.DatabaseRepository;
@@ -14,8 +14,8 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    DataRepository dataRepository(ApiInterface apiInterface) {
-        return new DataRepository(apiInterface);
+    DataRepository dataRepository(TestApi testApi) {
+        return new DataRepository(testApi);
     }
 
     @Singleton

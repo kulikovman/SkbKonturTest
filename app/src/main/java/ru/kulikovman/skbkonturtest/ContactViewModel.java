@@ -12,6 +12,6 @@ public class ContactViewModel extends ViewModel {
     }
 
     public void getContactList() {
-        data.requestContactList();
+        data.getContactList();
     }
 }

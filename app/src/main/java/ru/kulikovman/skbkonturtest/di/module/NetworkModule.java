@@ -13,14 +13,14 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.kulikovman.skbkonturtest.BuildConfig;
-import ru.kulikovman.skbkonturtest.api.ApiInterface;
+import ru.kulikovman.skbkonturtest.api.TestApi;
 
 @Module(includes = ContextModule.class)
 public class NetworkModule {
 
     @Provides
-    public ApiInterface apiInterface(Retrofit retrofit) {
-        return retrofit.create(ApiInterface.class);
+    public TestApi testApi(Retrofit retrofit) {
+        return retrofit.create(TestApi.class);
     }
 
     @Provides
@@ -41,7 +41,7 @@ public class NetworkModule {
     public OkHttpClient okHttpClient(Cache cache, HttpLoggingInterceptor httpLoggingInterceptor) {
         return new OkHttpClient()
                 .newBuilder()
-                .cache(cache)
+                //.cache(cache)
                 .addInterceptor(httpLoggingInterceptor)
                 .build();
     }
