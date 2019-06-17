@@ -14,10 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ru.kulikovman.skbkonturtest.databinding.FragmentSearchBinding;
+import ru.kulikovman.skbkonturtest.ui.adapter.ContactAdapter;
 import ru.kulikovman.skbkonturtest.util.sweet.SweetTextWatcher;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements ContactAdapter.ContactClickListener {
 
     private MainActivity activity;
     private FragmentSearchBinding binding;
@@ -49,6 +52,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void initUI() {
+        // Слушатель поискового поля
         binding.search.addTextChangedListener(new SweetTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -62,8 +66,16 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        // Инициализация списка контактов
+        ContactAdapter contactAdapter = new ContactAdapter(model);
+        contactAdapter.setContactClickListener(this);
 
-        model.getContactList();
+        RecyclerView contactList = binding.contactList;
+        contactList.setLayoutManager(new LinearLayoutManager(activity));
+        contactList.setAdapter(contactAdapter);
+        contactList.setHasFixedSize(false);
+
+        //model.getContactList();
     }
 
     public void clearSearchField() {
@@ -72,4 +84,9 @@ public class SearchFragment extends Fragment {
     }
 
 
+    @Override
+    public void onContactClick() {
+        // Передать контакт во вью модел
+        // и открыть экран подробной информации о контакте
+    }
 }

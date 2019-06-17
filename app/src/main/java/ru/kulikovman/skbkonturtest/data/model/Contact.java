@@ -6,6 +6,7 @@ public class Contact {
 
     private String id;
     private String name;
+    private String phone;
     private float height;
     private String biography;
     private Temperament temperament;
@@ -14,9 +15,10 @@ public class Contact {
     public Contact() {
     }
 
-    public Contact(String id, String name, float height, String biography, Temperament temperament, EducationPeriod educationPeriod) {
+    public Contact(String id, String name, String phone, float height, String biography, Temperament temperament, EducationPeriod educationPeriod) {
         this.id = id;
         this.name = name;
+        this.phone = phone;
         this.height = height;
         this.biography = biography;
         this.temperament = temperament;
@@ -37,6 +39,14 @@ public class Contact {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public float getHeight() {
