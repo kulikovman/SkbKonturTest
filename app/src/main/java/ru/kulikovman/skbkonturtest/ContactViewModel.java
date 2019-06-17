@@ -2,6 +2,7 @@ package ru.kulikovman.skbkonturtest;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.repository.DataRepository;
@@ -16,7 +17,7 @@ public class ContactViewModel extends ViewModel {
         data = App.getComponent().getDataRepository();
     }
 
-    public List<Contact> getContactList() {
+    public LiveData<List<Contact>> getContactList() {
         return data.getContactList();
     }
 

@@ -3,19 +3,26 @@ package ru.kulikovman.skbkonturtest;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.databinding.FragmentSearchBinding;
 import ru.kulikovman.skbkonturtest.ui.adapter.ContactAdapter;
 import ru.kulikovman.skbkonturtest.util.sweet.SweetTextWatcher;
@@ -25,6 +32,8 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
     private MainActivity activity;
     private FragmentSearchBinding binding;
     private ContactViewModel model;
+
+    private ContactAdapter contactAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -67,13 +76,27 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         });
 
         // Инициализация списка контактов
-        ContactAdapter contactAdapter = new ContactAdapter(model);
+        contactAdapter = new ContactAdapter(model);
         contactAdapter.setContactClickListener(this);
 
         RecyclerView contactList = binding.contactList;
         contactList.setLayoutManager(new LinearLayoutManager(activity));
+        contactList.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         contactList.setAdapter(contactAdapter);
         contactList.setHasFixedSize(false);
+
+        // Подписываемся на контакты
+        LiveData<List<Contact>> contacts = model.getContactList();
+        contacts.observe(this, new Observer<List<Contact>>() {
+            @Override
+            public void onChanged(List<Contact> contacts) {
+                Log.d("myLog", "Контактов в списке: " + contacts.size());
+
+                contactAdapter.setContacts(contacts);
+                contactAdapter.notifyDataSetChanged();
+                binding.loading.setVisibility(View.INVISIBLE);
+            }
+        });
 
         //model.getContactList();
     }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,7 @@ import ru.kulikovman.skbkonturtest.databinding.ItemContactBinding;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
     private ContactViewModel model;
-    private List<Contact> contacts;
+    private List<Contact> contacts = new ArrayList<>();
 
     private ContactClickListener contactClickListener;
 

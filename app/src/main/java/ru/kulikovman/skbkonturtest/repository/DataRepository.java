@@ -5,6 +5,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,21 +17,23 @@ public class DataRepository {
 
     private TestApi api;
 
-    private List<Contact> contacts = new ArrayList<>();
-
     public DataRepository(TestApi testApi) {
         api = testApi;
     }
 
-    public List<Contact> getContactList() {
+    public LiveData<List<Contact>> getContactList() {
+        final List<Contact> contactCollector = new ArrayList<>();
+        final MutableLiveData<List<Contact>> contacts = new MutableLiveData<>();
+
         // Первая часть контактов
         api.getFirstPart().enqueue(new Callback<List<Contact>>() {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    contacts.addAll(response.body());
+                    contactCollector.addAll(response.body());
+                    contacts.setValue(contactCollector);
 
-                    Log.d("myLog", "Получено контактов: " + contacts.size());
+                    Log.d("myLog", "part1: " + contactCollector.size());
                 }
             }
 
@@ -44,9 +48,10 @@ public class DataRepository {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    contacts.addAll(response.body());
+                    contactCollector.addAll(response.body());
+                    contacts.setValue(contactCollector);
 
-                    Log.d("myLog", "Получено контактов: " + contacts.size());
+                    Log.d("myLog", "part2: " + contactCollector.size());
                 }
             }
 
@@ -61,9 +66,10 @@ public class DataRepository {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    contacts.addAll(response.body());
+                    contactCollector.addAll(response.body());
+                    contacts.setValue(contactCollector);
 
-                    Log.d("myLog", "Получено контактов: " + contacts.size());
+                    Log.d("myLog", "part3: " + contactCollector.size());
                 }
             }
 
