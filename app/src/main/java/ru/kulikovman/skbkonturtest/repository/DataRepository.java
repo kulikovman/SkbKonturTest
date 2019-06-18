@@ -57,7 +57,7 @@ public class DataRepository {
 
             @Override
             public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.d("myLog", "Ошибка при getFirstPart / Throwable: " + t.getMessage());
+                Log.d("myLog", "Ошибка при getSecondPart / Throwable: " + t.getMessage());
             }
         });
 
@@ -75,7 +75,7 @@ public class DataRepository {
 
             @Override
             public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.d("myLog", "Ошибка при getFirstPart / Throwable: " + t.getMessage());
+                Log.d("myLog", "Ошибка при getThirdPart / Throwable: " + t.getMessage());
             }
         });
 

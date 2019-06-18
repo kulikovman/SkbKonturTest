@@ -2,19 +2,17 @@ package ru.kulikovman.skbkonturtest;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import ru.kulikovman.skbkonturtest.data.model.Contact;
+import androidx.navigation.fragment.NavHostFragment;
 import ru.kulikovman.skbkonturtest.databinding.FragmentInfoBinding;
 
 public class InfoFragment extends Fragment {
@@ -53,4 +51,18 @@ public class InfoFragment extends Fragment {
         binding.setContact(model.getSelectedContact());
         binding.setModel(this);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Переход назад
+            NavHostFragment.findNavController(this).popBackStack();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }
