@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -35,6 +37,13 @@ public class InfoFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // Настройка экшен бара
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().show();
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            activity.getSupportActionBar().setTitle("");
+        }
+
         model = ViewModelProviders.of(activity).get(ContactViewModel.class);
 
         initUI();

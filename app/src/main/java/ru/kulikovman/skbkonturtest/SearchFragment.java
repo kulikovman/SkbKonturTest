@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,8 +48,10 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Скрыть ActionBar в этом фрагменте
-        Objects.requireNonNull(activity.getSupportActionBar()).hide();
+        // Настройка экшен бара
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().hide();
+        }
 
         model = ViewModelProviders.of(activity).get(ContactViewModel.class);
 
