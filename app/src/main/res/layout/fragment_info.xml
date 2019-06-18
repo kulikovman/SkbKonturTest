@@ -3,6 +3,20 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".InfoFragment">
 
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="model"
+            type="ru.kulikovman.skbkonturtest.InfoFragment"/>
+
+        <variable
+            name="contact"
+            type="ru.kulikovman.skbkonturtest.data.model.Contact"/>
+
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +29,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/black"
             android:textSize="22sp"
+            android:text="@{contact.name}"
             tools:text="Stacey Zimmerman"/>
 
         <TextView
@@ -23,6 +38,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/clickable"
             android:textSize="14sp"
+            android:text="@{contact.phone}"
             tools:text="+7 (881) 470-3094"/>
 
         <TextView
@@ -31,6 +47,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/gray"
             android:textSize="14sp"
+            android:text="@{contact.temperamentName}"
             tools:text="Melancholic"/>
 
         <TextView
@@ -39,6 +56,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/gray"
             android:textSize="14sp"
+            android:text="@{contact.formattedEducationPeriod}"
             tools:text="13.11.2001 - 29.07.2018"/>
 
         <TextView
@@ -46,6 +64,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/black"
             android:textSize="14sp"
+            android:text="@{contact.biography}"
             tools:text="Elit id nostrud voluptate culpa qui. Qui quis ea sint reprehenderit proident sint tempor. Ipsum ut esse esse cupidatat."/>
 
     </LinearLayout>

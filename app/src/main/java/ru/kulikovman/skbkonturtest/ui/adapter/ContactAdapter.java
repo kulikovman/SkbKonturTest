@@ -10,28 +10,21 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.kulikovman.skbkonturtest.ContactViewModel;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.databinding.ItemContactBinding;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
-    private ContactViewModel model;
     private List<Contact> contacts = new ArrayList<>();
 
     private ContactClickListener contactClickListener;
 
     public interface ContactClickListener {
-        void onContactClick();
+        void onContactClick(Contact contact);
     }
 
     public void setContactClickListener(ContactClickListener contactClickListener) {
         this.contactClickListener = contactClickListener;
-    }
-
-    public ContactAdapter(ContactViewModel model) {
-        //this.contacts = contacts;
-        this.model = model;
     }
 
     public void setContacts(List<Contact> contacts) {
@@ -46,15 +39,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             super(itemView);
 
             binding = DataBindingUtil.bind(itemView);
-
-            // Слушатель нажатий по элементу
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            // Нажитие по элементу
-            contactClickListener.onContactClick();
+            contactClickListener.onContactClick(binding.getContact());
         }
     }
 
@@ -69,7 +59,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, int position) {
         holder.binding.setContact(contacts.get(position));
-        model.selectContact(contacts.get(position));
     }
 
     @Override

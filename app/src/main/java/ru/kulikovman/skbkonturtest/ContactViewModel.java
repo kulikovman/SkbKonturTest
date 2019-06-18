@@ -11,7 +11,7 @@ public class ContactViewModel extends ViewModel {
 
     private DataRepository data;
 
-    private Contact contact;
+    private Contact selectedContact;
 
     public ContactViewModel() {
         data = App.getComponent().getDataRepository();
@@ -22,10 +22,14 @@ public class ContactViewModel extends ViewModel {
     }
 
     public void selectContact(Contact contact) {
-        this.contact = contact;
+        this.selectedContact = contact;
+    }
+
+    public Contact getSelectedContact() {
+        return selectedContact;
     }
 
     public void clearContact() {
-        this.contact = null;
+        this.selectedContact = null;
     }
 }

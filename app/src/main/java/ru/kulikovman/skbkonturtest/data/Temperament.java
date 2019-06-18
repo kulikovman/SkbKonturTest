@@ -1,10 +1,12 @@
 package ru.kulikovman.skbkonturtest.data;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum Temperament {
 
-    MELANCHOLIC,
-    PHLEGMATIC,
-    SANGIUNE,
-    CHOLERIC
+    @SerializedName("melancholic") MELANCHOLIC,
+    @SerializedName("phlegmatic") PHLEGMATIC,
+    @SerializedName("sanguine") SANGIUNE,
+    @SerializedName("choleric") CHOLERIC
 
 }

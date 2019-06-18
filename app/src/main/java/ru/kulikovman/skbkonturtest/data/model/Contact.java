@@ -1,5 +1,9 @@
 package ru.kulikovman.skbkonturtest.data.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import ru.kulikovman.skbkonturtest.data.Temperament;
 
 public class Contact {
@@ -69,12 +73,22 @@ public class Contact {
         return temperament;
     }
 
+    public String getTemperamentName() {
+        String name = temperament.name();
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+    }
+
     public void setTemperament(Temperament temperament) {
         this.temperament = temperament;
     }
 
     public EducationPeriod getEducationPeriod() {
         return educationPeriod;
+    }
+
+    public String getFormattedEducationPeriod() {
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        return dateFormat.format(educationPeriod.getStart()) + " - " + dateFormat.format(educationPeriod.getEnd());
     }
 
     public void setEducationPeriod(EducationPeriod educationPeriod) {

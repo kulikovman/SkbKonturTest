@@ -16,9 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,12 +52,9 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         // Скрыть ActionBar в этом фрагменте
         Objects.requireNonNull(activity.getSupportActionBar()).hide();
 
-        // Подключение ViewModel
-        model = ViewModelProviders.of(this).get(ContactViewModel.class);
+        model = ViewModelProviders.of(activity).get(ContactViewModel.class);
 
         initUI();
-
-        binding.setModel(this);
     }
 
     private void initUI() {
@@ -76,7 +73,7 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         });
 
         // Инициализация списка контактов
-        contactAdapter = new ContactAdapter(model);
+        contactAdapter = new ContactAdapter();
         contactAdapter.setContactClickListener(this);
 
         RecyclerView contactList = binding.contactList;
@@ -98,7 +95,7 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
             }
         });
 
-        //model.getContactList();
+        binding.setModel(this);
     }
 
     public void clearSearchField() {
@@ -106,10 +103,14 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         binding.clear.setVisibility(View.INVISIBLE);
     }
 
-
     @Override
-    public void onContactClick() {
-        // Передать контакт во вью модел
-        // и открыть экран подробной информации о контакте
+    public void onContactClick(Contact contact) {
+        // Сохраняем нажатый контакт
+        model.selectContact(contact);
+
+        // Запуск экрана с подробной информацией о контакте
+        if (model.getSelectedContact() != null) {
+            NavHostFragment.findNavController(this).navigate(R.id.action_searchFragment_to_infoFragment);
+        }
     }
 }

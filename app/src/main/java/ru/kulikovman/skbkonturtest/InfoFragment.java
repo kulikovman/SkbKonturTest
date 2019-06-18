@@ -1,6 +1,8 @@
 package ru.kulikovman.skbkonturtest;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,20 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.databinding.FragmentInfoBinding;
 
 public class InfoFragment extends Fragment {
 
+    private MainActivity activity;
     private FragmentInfoBinding binding;
     private ContactViewModel model;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (MainActivity) context;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -24,9 +34,14 @@ public class InfoFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        model = ViewModelProviders.of(this).get(ContactViewModel.class);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        model = ViewModelProviders.of(activity).get(ContactViewModel.class);
+
+        initUI();
     }
 
+    private void initUI() {
+        binding.setContact(model.getSelectedContact());
+        binding.setModel(this);
+    }
 }
