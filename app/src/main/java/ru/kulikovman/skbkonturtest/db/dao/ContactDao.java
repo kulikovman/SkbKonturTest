@@ -21,9 +21,8 @@ public interface ContactDao {
     @Query("SELECT id, name, phone, height FROM Contact ORDER BY name ASC")
     LiveData<List<SimpleContact>> getAllSimpleContacts();
 
-    /*// TODO: 19.06.2019 Реализовать получение контактов соответствующих запросу
-    @Query("SELECT id, name, phone, height FROM Contact ORDER BY name ASC")
-    LiveData<List<SimpleContact>> getSimpleContactsByQuery(String query);*/
+    @Query("SELECT id, name, phone, height FROM Contact WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
+    LiveData<List<SimpleContact>> getSimpleContactsByQuery(String query);
 
     @Query("SELECT * FROM Contact WHERE id = :id")
     LiveData<Contact> getContactById(String id);

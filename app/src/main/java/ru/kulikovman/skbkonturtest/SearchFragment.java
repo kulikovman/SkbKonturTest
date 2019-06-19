@@ -3,6 +3,7 @@ package ru.kulikovman.skbkonturtest;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,12 +65,12 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         binding.search.addTextChangedListener(new SweetTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null) {
-                    binding.clear.setVisibility(View.VISIBLE);
+                if (s != null && !TextUtils.isEmpty(s.toString())) {
+                    Log.d("myLog", "Поисковый запрос: " + s.toString());
+                    showLoading(true);
 
-                    // Делаем поиск по введенному запросу
-                    // ...
-
+                    // Получаем контакты по запросу
+                    updateContactListByQuery(s.toString());
                 }
             }
         });
@@ -85,7 +86,7 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         contactList.setHasFixedSize(false);
 
         // Подписываемся на контакты
-        LiveData<List<SimpleContact>> contactsFromDatabase = model.getContactsFromDatabase();
+        LiveData<List<SimpleContact>> contactsFromDatabase = model.getContacts();
         contactsFromDatabase.observe(this, new Observer<List<SimpleContact>>() {
             @Override
             public void onChanged(List<SimpleContact> contacts) {
@@ -93,11 +94,18 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
 
                 contactAdapter.setContacts(contacts);
                 contactAdapter.notifyDataSetChanged();
-                binding.loading.setVisibility(View.INVISIBLE);
+
+                showLoading(false);
             }
         });
 
         // Обновление контактов
+        updateContactList();
+
+        binding.setModel(this);
+    }
+
+    private void updateContactList() {
         if (model.isNeedUpdateContacts()) {
             LiveData<List<Contact>> contactsFromServer = model.getContactsFromServer();
             contactsFromServer.observe(this, new Observer<List<Contact>>() {
@@ -107,13 +115,21 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
                 }
             });
         }
-
-        binding.setModel(this);
     }
 
-    public void clearSearchField() {
-        binding.search.setText(null);
-        binding.clear.setVisibility(View.INVISIBLE);
+    private void updateContactListByQuery(String query) {
+        showLoading(true);
+
+        LiveData<List<SimpleContact>> contacts = model.getContactsByQuery(query);
+        contacts.observe(this, new Observer<List<SimpleContact>>() {
+            @Override
+            public void onChanged(List<SimpleContact> contacts) {
+                contactAdapter.setContacts(contacts);
+                contactAdapter.notifyDataSetChanged();
+
+                showLoading(false);
+            }
+        });
     }
 
     @Override
@@ -125,5 +141,13 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         if (model.getSelectedContact() != null) {
             NavHostFragment.findNavController(this).navigate(R.id.action_searchFragment_to_infoFragment);
         }
+    }
+
+    public void clearSearchField() {
+        binding.search.setText(null);
+    }
+
+    private void showLoading(boolean isShow) {
+        binding.loading.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 }

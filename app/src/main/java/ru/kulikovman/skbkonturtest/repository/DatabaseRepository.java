@@ -16,8 +16,12 @@ public class DatabaseRepository {
         this.contactDao = contactDao;
     }
 
-    public LiveData<List<SimpleContact>> getSimpleContacts() {
+    public LiveData<List<SimpleContact>> getContacts() {
         return contactDao.getAllSimpleContacts();
+    }
+
+    public LiveData<List<SimpleContact>> getContactsByQuery(String query) {
+        return contactDao.getSimpleContactsByQuery(query);
     }
 
     public LiveData<Contact> getContactById(String id) {

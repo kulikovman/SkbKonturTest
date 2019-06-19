@@ -23,8 +23,12 @@ public class ContactViewModel extends ViewModel {
         database = App.getComponent().getDatabaseRepository();
     }
 
-    public LiveData<List<SimpleContact>> getContactsFromDatabase() {
-        return database.getSimpleContacts();
+    public LiveData<List<SimpleContact>> getContacts() {
+        return database.getContacts();
+    }
+
+    public LiveData<List<SimpleContact>> getContactsByQuery(String query) {
+        return database.getContactsByQuery(query);
     }
 
     public LiveData<List<Contact>> getContactsFromServer() {
