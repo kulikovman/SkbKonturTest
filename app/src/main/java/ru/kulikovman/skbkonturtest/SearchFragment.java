@@ -84,8 +84,8 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         contactList.setHasFixedSize(false);
 
         // Подписываемся на контакты
-        LiveData<List<Contact>> contacts = model.getContactList();
-        contacts.observe(this, new Observer<List<Contact>>() {
+        LiveData<List<Contact>> contactsFromDatabase = model.getContactsFromDatabase();
+        contactsFromDatabase.observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(List<Contact> contacts) {
                 Log.d("myLog", "Контактов в списке: " + contacts.size());
@@ -95,6 +95,17 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
                 binding.loading.setVisibility(View.INVISIBLE);
             }
         });
+
+        // Обновление контактов
+        if (model.isNeedUpdateContacts()) {
+            LiveData<List<Contact>> contactsFromServer = model.getContactsFromServer();
+            contactsFromServer.observe(this, new Observer<List<Contact>>() {
+                @Override
+                public void onChanged(List<Contact> contacts) {
+                    model.updateContacts(contacts);
+                }
+            });
+        }
 
         binding.setModel(this);
     }

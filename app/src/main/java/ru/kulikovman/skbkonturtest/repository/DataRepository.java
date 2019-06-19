@@ -21,7 +21,7 @@ public class DataRepository {
         api = testApi;
     }
 
-    public LiveData<List<Contact>> getContactList() {
+    public LiveData<List<Contact>> getContacts() {
         final List<Contact> contactCollector = new ArrayList<>();
         final MutableLiveData<List<Contact>> contacts = new MutableLiveData<>();
 
@@ -43,7 +43,7 @@ public class DataRepository {
             }
         });
 
-        // Вторая часть контактов
+        /*// Вторая часть контактов
         api.getSecondPart().enqueue(new Callback<List<Contact>>() {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
@@ -77,7 +77,7 @@ public class DataRepository {
             public void onFailure(Call<List<Contact>> call, Throwable t) {
                 Log.d("myLog", "Ошибка при getThirdPart / Throwable: " + t.getMessage());
             }
-        });
+        });*/
 
         return contacts;
     }

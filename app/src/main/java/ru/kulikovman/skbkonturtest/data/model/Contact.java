@@ -4,22 +4,33 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 import ru.kulikovman.skbkonturtest.data.Temperament;
+import ru.kulikovman.skbkonturtest.db.converter.DateConverter;
+import ru.kulikovman.skbkonturtest.db.converter.TemperamentConverter;
 
+@Entity
+@TypeConverters({TemperamentConverter.class, DateConverter.class})
 public class Contact {
 
+    @NonNull
+    @PrimaryKey
     private String id;
+
     private String name;
     private String phone;
     private float height;
     private String biography;
     private Temperament temperament;
+
+    @Embedded
     private EducationPeriod educationPeriod;
 
-    public Contact() {
-    }
-
-    public Contact(String id, String name, String phone, float height, String biography, Temperament temperament, EducationPeriod educationPeriod) {
+    public Contact(@NonNull String id, String name, String phone, float height, String biography, Temperament temperament, EducationPeriod educationPeriod) {
         this.id = id;
         this.name = name;
         this.phone = phone;

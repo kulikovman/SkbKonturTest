@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.kulikovman.skbkonturtest.api.TestApi;
-import ru.kulikovman.skbkonturtest.db.AppDatabase;
+import ru.kulikovman.skbkonturtest.db.dao.ContactDao;
 import ru.kulikovman.skbkonturtest.repository.DataRepository;
 import ru.kulikovman.skbkonturtest.repository.DatabaseRepository;
 
@@ -20,7 +20,7 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    DatabaseRepository databaseRepository(AppDatabase appDatabase) {
-        return new DatabaseRepository(appDatabase);
+    DatabaseRepository databaseRepository(ContactDao contactDao) {
+        return new DatabaseRepository(contactDao);
     }
 }
