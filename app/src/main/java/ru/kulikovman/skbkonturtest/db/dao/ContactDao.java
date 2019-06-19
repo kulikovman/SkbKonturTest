@@ -10,6 +10,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
+import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 
 @Dao
 public interface ContactDao {
@@ -17,8 +18,15 @@ public interface ContactDao {
     @Query("SELECT * FROM Contact ORDER BY name ASC")
     LiveData<List<Contact>> getAllContacts();
 
+    @Query("SELECT id, name, phone, height FROM Contact ORDER BY name ASC")
+    LiveData<List<SimpleContact>> getAllSimpleContacts();
+
+    /*// TODO: 19.06.2019 Реализовать получение контактов соответствующих запросу
+    @Query("SELECT id, name, phone, height FROM Contact ORDER BY name ASC")
+    LiveData<List<SimpleContact>> getSimpleContactsByQuery(String query);*/
+
     @Query("SELECT * FROM Contact WHERE id = :id")
-    Contact getContactById(String id);
+    LiveData<Contact> getContactById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Contact> contacts);

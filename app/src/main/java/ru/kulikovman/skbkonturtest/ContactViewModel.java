@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
+import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.repository.DataRepository;
 import ru.kulikovman.skbkonturtest.repository.DatabaseRepository;
 
@@ -14,7 +15,7 @@ public class ContactViewModel extends ViewModel {
     private DataRepository data;
     private DatabaseRepository database;
 
-    private Contact selectedContact;
+    private SimpleContact selectedContact;
     private long lastUpdate = 0;
 
     public ContactViewModel() {
@@ -22,8 +23,8 @@ public class ContactViewModel extends ViewModel {
         database = App.getComponent().getDatabaseRepository();
     }
 
-    public LiveData<List<Contact>> getContactsFromDatabase() {
-        return database.getContacts();
+    public LiveData<List<SimpleContact>> getContactsFromDatabase() {
+        return database.getSimpleContacts();
     }
 
     public LiveData<List<Contact>> getContactsFromServer() {
@@ -40,12 +41,12 @@ public class ContactViewModel extends ViewModel {
         return System.currentTimeMillis() - lastUpdate > minute;
     }
 
-    public void selectContact(Contact contact) {
-        this.selectedContact = contact;
+    public void selectContact(SimpleContact simpleContact) {
+        this.selectedContact = simpleContact;
     }
 
-    public Contact getSelectedContact() {
-        return selectedContact;
+    public LiveData<Contact> getSelectedContact() {
+        return database.getContactById(selectedContact.getId());
     }
 
     public void clearContact() {

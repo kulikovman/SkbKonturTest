@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
+import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.databinding.FragmentSearchBinding;
 import ru.kulikovman.skbkonturtest.ui.adapter.ContactAdapter;
 import ru.kulikovman.skbkonturtest.util.sweet.SweetTextWatcher;
@@ -84,10 +85,10 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         contactList.setHasFixedSize(false);
 
         // Подписываемся на контакты
-        LiveData<List<Contact>> contactsFromDatabase = model.getContactsFromDatabase();
-        contactsFromDatabase.observe(this, new Observer<List<Contact>>() {
+        LiveData<List<SimpleContact>> contactsFromDatabase = model.getContactsFromDatabase();
+        contactsFromDatabase.observe(this, new Observer<List<SimpleContact>>() {
             @Override
-            public void onChanged(List<Contact> contacts) {
+            public void onChanged(List<SimpleContact> contacts) {
                 Log.d("myLog", "Контактов в списке: " + contacts.size());
 
                 contactAdapter.setContacts(contacts);
@@ -116,9 +117,9 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
     }
 
     @Override
-    public void onContactClick(Contact contact) {
+    public void onContactClick(SimpleContact simpleContact) {
         // Сохраняем нажатый контакт
-        model.selectContact(contact);
+        model.selectContact(simpleContact);
 
         // Запуск экрана с подробной информацией о контакте
         if (model.getSelectedContact() != null) {

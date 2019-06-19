@@ -5,6 +5,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
+import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.db.dao.ContactDao;
 
 public class DatabaseRepository {
@@ -15,8 +16,12 @@ public class DatabaseRepository {
         this.contactDao = contactDao;
     }
 
-    public LiveData<List<Contact>> getContacts() {
-        return contactDao.getAllContacts();
+    public LiveData<List<SimpleContact>> getSimpleContacts() {
+        return contactDao.getAllSimpleContacts();
+    }
+
+    public LiveData<Contact> getContactById(String id) {
+        return contactDao.getContactById(id);
     }
 
     public void saveContactList(List<Contact> contacts) {

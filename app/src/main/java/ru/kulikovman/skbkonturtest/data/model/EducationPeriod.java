@@ -7,9 +7,6 @@ public class EducationPeriod {
     private Date start;
     private Date end;
 
-    public EducationPeriod() {
-    }
-
     public EducationPeriod(Date start, Date end) {
         this.start = start;
         this.end = end;

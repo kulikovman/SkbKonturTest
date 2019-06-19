@@ -10,24 +10,24 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.kulikovman.skbkonturtest.data.model.Contact;
+import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.databinding.ItemContactBinding;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
-    private List<Contact> contacts = new ArrayList<>();
+    private List<SimpleContact> contacts = new ArrayList<>();
 
     private ContactClickListener contactClickListener;
 
     public interface ContactClickListener {
-        void onContactClick(Contact contact);
+        void onContactClick(SimpleContact simpleContact);
     }
 
     public void setContactClickListener(ContactClickListener contactClickListener) {
         this.contactClickListener = contactClickListener;
     }
 
-    public void setContacts(List<Contact> contacts) {
+    public void setContacts(List<SimpleContact> contacts) {
         this.contacts = contacts;
     }
 

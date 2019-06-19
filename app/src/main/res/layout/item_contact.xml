@@ -6,7 +6,7 @@
 
         <variable
             name="contact"
-            type="ru.kulikovman.skbkonturtest.data.model.Contact" />
+            type="ru.kulikovman.skbkonturtest.data.model.SimpleContact" />
 
     </data>
 
