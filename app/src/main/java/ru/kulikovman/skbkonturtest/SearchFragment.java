@@ -67,15 +67,18 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
             public void afterTextChanged(Editable s) {
                 if (s != null && !TextUtils.isEmpty(s.toString())) {
                     Log.d("myLog", "Поисковый запрос: " + s.toString());
+                    showClearButton(true);
                     showLoading(true);
 
                     // Получаем контакты по запросу
                     updateContactListByQuery(s.toString());
+                } else {
+                    showClearButton(false);
                 }
             }
         });
 
-        // Инициализация списка контактов
+        // Инициализация списка
         contactAdapter = new ContactAdapter();
         contactAdapter.setContactClickListener(this);
 
@@ -85,19 +88,8 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         contactList.setAdapter(contactAdapter);
         contactList.setHasFixedSize(false);
 
-        // Подписываемся на контакты
-        LiveData<List<SimpleContact>> contactsFromDatabase = model.getContacts();
-        contactsFromDatabase.observe(this, new Observer<List<SimpleContact>>() {
-            @Override
-            public void onChanged(List<SimpleContact> contacts) {
-                Log.d("myLog", "Контактов в списке: " + contacts.size());
-
-                contactAdapter.setContacts(contacts);
-                contactAdapter.notifyDataSetChanged();
-
-                showLoading(false);
-            }
-        });
+        // Подгружаем контакты
+        loadContactList();
 
         // Обновление контактов
         updateContactList();
@@ -105,7 +97,22 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         binding.setModel(this);
     }
 
+    private void loadContactList() {
+        LiveData<List<SimpleContact>> contactsFromDatabase = model.getContacts();
+        contactsFromDatabase.observe(this, new Observer<List<SimpleContact>>() {
+            @Override
+            public void onChanged(List<SimpleContact> contacts) {
+                Log.d("myLog", "Контактов в списке: " + contacts.size());
+                contactAdapter.setContacts(contacts);
+                contactAdapter.notifyDataSetChanged();
+
+                showLoading(false);
+            }
+        });
+    }
+
     private void updateContactList() {
+        // Обновляет если прошло достаточно времени
         if (model.isNeedUpdateContacts()) {
             LiveData<List<Contact>> contactsFromServer = model.getContactsFromServer();
             contactsFromServer.observe(this, new Observer<List<Contact>>() {
@@ -132,6 +139,13 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         });
     }
 
+    public void clearSearchField() {
+        // Очищает поле и подгружает котакты
+        binding.search.setText(null);
+        showLoading(true);
+        loadContactList();
+    }
+
     @Override
     public void onContactClick(SimpleContact simpleContact) {
         // Сохраняем нажатый контакт
@@ -143,11 +157,11 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         }
     }
 
-    public void clearSearchField() {
-        binding.search.setText(null);
-    }
-
     private void showLoading(boolean isShow) {
         binding.loading.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void showClearButton(boolean isShow) {
+        binding.clear.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 }
