@@ -1,7 +1,10 @@
 package ru.kulikovman.skbkonturtest;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,9 +65,15 @@ public class InfoFragment extends Fragment {
         binding.setModel(this);
     }
 
+    public void onPhoneNumberClick() {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + binding.phone.getText()));
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Log.d("myLog", "Нажата кнопка назад...");
             // Переход назад
             NavHostFragment.findNavController(this).popBackStack();
 
@@ -73,6 +82,4 @@ public class InfoFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }

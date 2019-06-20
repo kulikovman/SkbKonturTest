@@ -33,10 +33,12 @@
             tools:text="Stacey Zimmerman"/>
 
         <TextView
+            android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:textColor="@color/clickable"
+            android:onClick="@{() -> model.onPhoneNumberClick()}"
             android:textSize="14sp"
             android:text="@{contact.phone}"
             tools:text="+7 (881) 470-3094"/>
