@@ -6,9 +6,11 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.databinding.ItemContactBinding;
@@ -30,8 +32,41 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         this.contactClickListener = contactClickListener;
     }
 
-    public void setContacts(List<SimpleContact> contacts) {
-        this.contacts = contacts;
+    public void setContacts(final List<SimpleContact> update) {
+        if (getItemCount() == 0) {
+            contacts = update;
+            notifyItemRangeInserted(0, update.size());
+        } else {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                @Override
+                public int getOldListSize() {
+                    return contacts.size();
+                }
+
+                @Override
+                public int getNewListSize() {
+                    return update.size();
+                }
+
+                @Override
+                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    return Objects.equals(contacts.get(oldItemPosition).getId(), update.get(newItemPosition).getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                    SimpleContact newContact = update.get(newItemPosition);
+                    SimpleContact oldContact = contacts.get(oldItemPosition);
+                    return Objects.equals(newContact.getId(), oldContact.getId())
+                            && Objects.equals(newContact.getName(), oldContact.getName())
+                            && Objects.equals(newContact.getPhone(), oldContact.getPhone())
+                            && newContact.getHeight() == oldContact.getHeight();
+                }
+            });
+
+            contacts = update;
+            result.dispatchUpdatesTo(this);
+        }
     }
 
     public class ContactHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -66,6 +101,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
     @Override
     public int getItemCount() {
-        return contacts.size();
+        return contacts == null ? 0 : contacts.size();
     }
 }
