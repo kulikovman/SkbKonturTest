@@ -59,4 +59,8 @@ public class ContactViewModel extends ViewModel {
     public LiveData<Contact> getSelectedContact() {
         return database.getContactById(selectedContact.getId());
     }
+
+    public LiveData<Integer> getConnectionStatus() {
+        return data.getConnectionStatus();
+    }
 }

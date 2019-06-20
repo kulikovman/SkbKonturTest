@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SkbKonturTest</string>
+
     <string name="search">Поиск</string>
+    <string name="no_internet_connection">Нет подключения к сети</string>
 
 </resources>

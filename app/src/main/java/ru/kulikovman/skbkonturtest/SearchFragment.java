@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +29,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.databinding.FragmentSearchBinding;
+import ru.kulikovman.skbkonturtest.repository.DataRepository;
 import ru.kulikovman.skbkonturtest.ui.adapter.ContactAdapter;
 import ru.kulikovman.skbkonturtest.util.sweet.SweetTextWatcher;
 
@@ -86,10 +90,28 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         contactList.setLayoutManager(new LinearLayoutManager(activity));
         contactList.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         contactList.setAdapter(contactAdapter);
-        contactList.setHasFixedSize(false);
+        contactList.setHasFixedSize(true);
+        contactList.setItemAnimator(new DefaultItemAnimator());
 
         // Инициализация контейнера для обновления при свайпе вниз
         binding.swipeRefreshLayout.setOnRefreshListener(this);
+
+        // Отслеживание статуса соединения
+        LiveData<Integer> connectionStatus = model.getConnectionStatus();
+        connectionStatus.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer status) {
+                Log.d("myLog", "Статус интернет соединения: " + status);
+                if (status == DataRepository.NO_CONNECTION) {
+                    // Сообщение об отсутствии подключения
+                    Snackbar.make(binding.searchContainer, getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+
+                    // Отключение индикаторов загрузки
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    showLoading(false);
+                }
+            }
+        });
 
         // Загружаем контакты
         loadContactList();
@@ -113,9 +135,11 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
                 contactAdapter.setContacts(contacts);
                 contactAdapter.notifyDataSetChanged();
 
-                // Отключение индикатора загрузки и анимаци контейнера
-                binding.swipeRefreshLayout.setRefreshing(false);
-                showLoading(false);
+                // Отключение индикаторов загрузки
+                if (contacts.size() > 0) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    showLoading(false);
+                }
             }
         });
     }

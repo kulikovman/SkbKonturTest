@@ -15,12 +15,15 @@ import ru.kulikovman.skbkonturtest.databinding.ItemContactBinding;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
-    private List<SimpleContact> contacts = new ArrayList<>();
-
+    private List<SimpleContact> contacts;
     private ContactClickListener contactClickListener;
 
     public interface ContactClickListener {
         void onContactClick(SimpleContact simpleContact);
+    }
+
+    public ContactAdapter() {
+        this.contacts = new ArrayList<>();
     }
 
     public void setContactClickListener(ContactClickListener contactClickListener) {
