@@ -41,13 +41,6 @@ public class InfoFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Настройка экшен бара
-        if (activity.getSupportActionBar() != null) {
-            activity.getSupportActionBar().show();
-            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            activity.getSupportActionBar().setTitle("");
-        }
-
         model = ViewModelProviders.of(activity).get(ContactViewModel.class);
 
         initUI();
@@ -70,16 +63,8 @@ public class InfoFragment extends Fragment {
         startActivity(intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Log.d("myLog", "Нажата кнопка назад...");
-            // Переход назад
-            NavHostFragment.findNavController(this).popBackStack();
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onHomeButtonClick() {
+        // Переход назад
+        NavHostFragment.findNavController(this).popBackStack();
     }
 }

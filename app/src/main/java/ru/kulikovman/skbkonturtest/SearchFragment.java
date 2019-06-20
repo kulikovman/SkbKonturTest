@@ -51,11 +51,6 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Настройка экшен бара
-        if (activity.getSupportActionBar() != null) {
-            activity.getSupportActionBar().hide();
-        }
-
         model = ViewModelProviders.of(activity).get(ContactViewModel.class);
 
         initUI();
