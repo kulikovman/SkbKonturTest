@@ -1,5 +1,7 @@
 package ru.kulikovman.skbkonturtest;
 
+import android.text.TextUtils;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +18,7 @@ public class ContactViewModel extends ViewModel {
     private DatabaseRepository database;
 
     private SimpleContact selectedContact;
+    private String searchQuery;
     private long lastUpdate = 0;
 
     public ContactViewModel() {
@@ -24,11 +27,20 @@ public class ContactViewModel extends ViewModel {
     }
 
     public LiveData<List<SimpleContact>> getContacts() {
-        return database.getContacts();
+        return TextUtils.isEmpty(searchQuery) ? database.getContacts() : database.getContactsByQuery(searchQuery);
     }
 
-    public LiveData<List<SimpleContact>> getContactsByQuery(String query) {
-        return database.getContactsByQuery(query);
+    public void saveSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+    }
+
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public boolean isNeedUpdateContacts() {
+        long minute = TimeUnit.MINUTES.toMillis(1);
+        return System.currentTimeMillis() - lastUpdate > minute;
     }
 
     public LiveData<List<Contact>> getContactsFromServer() {
@@ -40,20 +52,11 @@ public class ContactViewModel extends ViewModel {
         database.saveContactList(contacts);
     }
 
-    public boolean isNeedUpdateContacts() {
-        long minute = TimeUnit.MINUTES.toMillis(1);
-        return System.currentTimeMillis() - lastUpdate > minute;
-    }
-
     public void selectContact(SimpleContact simpleContact) {
         this.selectedContact = simpleContact;
     }
 
     public LiveData<Contact> getSelectedContact() {
         return database.getContactById(selectedContact.getId());
-    }
-
-    public void clearContact() {
-        this.selectedContact = null;
     }
 }
