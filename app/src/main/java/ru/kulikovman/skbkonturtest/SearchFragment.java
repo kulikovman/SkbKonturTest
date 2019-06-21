@@ -133,7 +133,6 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
             public void onChanged(List<SimpleContact> contacts) {
                 Log.d("myLog", "Контактов в списке: " + contacts.size());
                 contactAdapter.setContacts(contacts);
-                contactAdapter.notifyDataSetChanged();
 
                 // Отключение индикаторов загрузки
                 if (contacts.size() > 0) {
