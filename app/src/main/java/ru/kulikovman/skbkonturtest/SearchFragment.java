@@ -98,18 +98,15 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
 
         // Отслеживание статуса соединения
         LiveData<Integer> connectionStatus = model.getConnectionStatus();
-        connectionStatus.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer status) {
-                Log.d("myLog", "Статус интернет соединения: " + status);
-                if (status == DataRepository.NO_CONNECTION) {
-                    // Сообщение об отсутствии подключения
-                    Snackbar.make(binding.searchContainer, getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+        connectionStatus.observe(this, status -> {
+            Log.d("myLog", "Статус интернет соединения: " + status);
+            if (status == DataRepository.NO_CONNECTION) {
+                // Сообщение об отсутствии подключения
+                Snackbar.make(binding.searchContainer, getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
 
-                    // Отключение индикаторов загрузки
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    showLoading(false);
-                }
+                // Отключение индикаторов загрузки
+                binding.swipeRefreshLayout.setRefreshing(false);
+                showLoading(false);
             }
         });
 
@@ -128,29 +125,23 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         showLoading(true);
 
         LiveData<List<SimpleContact>> contacts = model.getContacts();
-        contacts.observe(this, new Observer<List<SimpleContact>>() {
-            @Override
-            public void onChanged(List<SimpleContact> contacts) {
-                Log.d("myLog", "Контактов в списке: " + contacts.size());
-                contactAdapter.setContacts(contacts);
+        contacts.observe(this, contacts1 -> {
+            Log.d("myLog", "Контактов в списке: " + contacts1.size());
+            contactAdapter.setContacts(contacts1);
 
-                // Отключение индикаторов загрузки
-                // Если список не пустой или есть поисковый запрос
-                if (contacts.size() > 0 || !TextUtils.isEmpty(model.getSearchQuery())) {
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    showLoading(false);
-                }
+            // Отключение индикаторов загрузки
+            // Если список не пустой или есть поисковый запрос
+            if (contacts1.size() > 0 || !TextUtils.isEmpty(model.getSearchQuery())) {
+                binding.swipeRefreshLayout.setRefreshing(false);
+                showLoading(false);
             }
         });
     }
 
     private void updateContactList() {
         LiveData<List<Contact>> contactsFromServer = model.getContactsFromServer();
-        contactsFromServer.observe(this, new Observer<List<Contact>>() {
-            @Override
-            public void onChanged(List<Contact> contacts) {
-                model.updateContacts(contacts);
-            }
+        contactsFromServer.observe(this, contacts -> {
+            model.updateContacts(contacts);
         });
     }
 
