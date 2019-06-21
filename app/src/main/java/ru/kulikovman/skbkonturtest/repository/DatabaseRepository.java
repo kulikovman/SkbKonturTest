@@ -20,8 +20,12 @@ public class DatabaseRepository {
         return contactDao.getAllSimpleContacts();
     }
 
-    public LiveData<List<SimpleContact>> getContactsByQuery(String query) {
-        return contactDao.getSimpleContactsByQuery(query);
+    public LiveData<List<SimpleContact>> getContactsByName(String query) {
+        return contactDao.getSimpleContactsByName(query);
+    }
+
+    public LiveData<List<SimpleContact>> getContactsByPhone(String query) {
+        return contactDao.getSimpleContactsByPhone(query);
     }
 
     public LiveData<Contact> getContactById(String id) {

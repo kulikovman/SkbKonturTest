@@ -22,7 +22,10 @@ public interface ContactDao {
     LiveData<List<SimpleContact>> getAllSimpleContacts();
 
     @Query("SELECT id, name, phone, height FROM Contact WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
-    LiveData<List<SimpleContact>> getSimpleContactsByQuery(String query);
+    LiveData<List<SimpleContact>> getSimpleContactsByName(String query);
+
+    @Query("SELECT id, name, phone, height FROM Contact WHERE clearPhone LIKE '%' || :query || '%' ORDER BY name ASC")
+    LiveData<List<SimpleContact>> getSimpleContactsByPhone(String query);
 
     @Query("SELECT * FROM Contact WHERE id = :id")
     LiveData<Contact> getContactById(String id);

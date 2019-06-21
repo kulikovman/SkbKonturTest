@@ -44,7 +44,7 @@ public class DataRepository {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    contactCollector.addAll(response.body());
+                    addToContactsCollector(contactCollector, response.body());
                     contacts.setValue(contactCollector);
 
                     Log.d("myLog", "After source 1: " + contactCollector.size());
@@ -67,7 +67,7 @@ public class DataRepository {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    contactCollector.addAll(response.body());
+                    addToContactsCollector(contactCollector, response.body());
                     contacts.setValue(contactCollector);
 
                     Log.d("myLog", "After source 2: " + contactCollector.size());
@@ -90,7 +90,7 @@ public class DataRepository {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    contactCollector.addAll(response.body());
+                    addToContactsCollector(contactCollector, response.body());
                     contacts.setValue(contactCollector);
 
                     Log.d("myLog", "After source 3: " + contactCollector.size());
@@ -109,6 +109,13 @@ public class DataRepository {
         });
 
         return contacts;
+    }
+
+    private void addToContactsCollector(List<Contact> contactCollector, List<Contact> contacts) {
+        for (Contact c : contacts) {
+            contactCollector.add(new Contact(c.getId(), c.getName(), c.getPhone(), c.getHeight(),
+                    c.getBiography(), c.getTemperament(), c.getEducationPeriod()));
+        }
     }
 
     private void setDefaultConnectionStatus() {

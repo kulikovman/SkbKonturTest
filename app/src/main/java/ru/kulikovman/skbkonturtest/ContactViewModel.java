@@ -27,7 +27,15 @@ public class ContactViewModel extends ViewModel {
     }
 
     public LiveData<List<SimpleContact>> getContacts() {
-        return TextUtils.isEmpty(searchQuery) ? database.getContacts() : database.getContactsByQuery(searchQuery);
+        if (TextUtils.isEmpty(searchQuery)) {
+            return database.getContacts();
+        } else {
+            if (TextUtils.isDigitsOnly(searchQuery)) {
+                return database.getContactsByPhone(searchQuery);
+            } else {
+                return database.getContactsByName(searchQuery);
+            }
+        }
     }
 
     public void saveSearchQuery(String searchQuery) {

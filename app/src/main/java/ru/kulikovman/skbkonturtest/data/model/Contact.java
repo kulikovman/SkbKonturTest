@@ -23,6 +23,7 @@ public class Contact {
 
     private String name;
     private String phone;
+    private String clearPhone;
     private float height;
     private String biography;
     private Temperament temperament;
@@ -34,17 +35,19 @@ public class Contact {
         this.id = id;
         this.name = name;
         this.phone = phone;
+        this.clearPhone = phone.replaceAll("\\D+","");
         this.height = height;
         this.biography = biography;
         this.temperament = temperament;
         this.educationPeriod = educationPeriod;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -62,6 +65,14 @@ public class Contact {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getClearPhone() {
+        return clearPhone;
+    }
+
+    public void setClearPhone(String clearPhone) {
+        this.clearPhone = clearPhone;
     }
 
     public float getHeight() {
@@ -84,11 +95,6 @@ public class Contact {
         return temperament;
     }
 
-    public String getTemperamentName() {
-        String name = temperament.name();
-        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-    }
-
     public void setTemperament(Temperament temperament) {
         this.temperament = temperament;
     }
@@ -97,12 +103,17 @@ public class Contact {
         return educationPeriod;
     }
 
+    public void setEducationPeriod(EducationPeriod educationPeriod) {
+        this.educationPeriod = educationPeriod;
+    }
+
+    public String getTemperamentName() {
+        String name = temperament.name();
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+    }
+
     public String getFormattedEducationPeriod() {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         return dateFormat.format(educationPeriod.getStart()) + " - " + dateFormat.format(educationPeriod.getEnd());
-    }
-
-    public void setEducationPeriod(EducationPeriod educationPeriod) {
-        this.educationPeriod = educationPeriod;
     }
 }
