@@ -135,7 +135,8 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
                 contactAdapter.setContacts(contacts);
 
                 // Отключение индикаторов загрузки
-                if (contacts.size() > 0) {
+                // Если список не пустой или есть поисковый запрос
+                if (contacts.size() > 0 || !TextUtils.isEmpty(model.getSearchQuery())) {
                     binding.swipeRefreshLayout.setRefreshing(false);
                     showLoading(false);
                 }
