@@ -1,6 +1,9 @@
 package ru.kulikovman.skbkonturtest.di.module;
 
 import android.content.Context;
+import android.content.res.Resources;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,7 +18,14 @@ public class ContextModule {
     }
 
     @Provides
+    @Singleton
     public Context context() {
         return context;
+    }
+
+    @Provides
+    @Singleton
+    public Resources resources() {
+        return context.getResources();
     }
 }

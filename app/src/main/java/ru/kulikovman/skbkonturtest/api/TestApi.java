@@ -2,19 +2,19 @@ package ru.kulikovman.skbkonturtest.api;
 
 import java.util.List;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 
 public interface TestApi {
 
     @GET("generated-01.json")
-    Call<List<Contact>> getSourceOne();
+    Observable<List<Contact>> getSourceOne();
 
     @GET("generated-02.json")
-    Call<List<Contact>> getSourceTwo();
+    Observable<List<Contact>> getSourceTwo();
 
     @GET("generated-03.json")
-    Call<List<Contact>> getSourceThree();
+    Observable<List<Contact>> getSourceThree();
 
 }

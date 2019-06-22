@@ -7,13 +7,17 @@ import java.io.File;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.kulikovman.skbkonturtest.BuildConfig;
 import ru.kulikovman.skbkonturtest.api.TestApi;
+
 
 @Module(includes = ContextModule.class)
 public class NetworkModule {
@@ -24,17 +28,23 @@ public class NetworkModule {
     }
 
     @Provides
-    public Retrofit retrofit(OkHttpClient okHttpClient, GsonConverterFactory gsonConverterFactory) {
+    public Retrofit retrofit(OkHttpClient okHttpClient, GsonConverterFactory gsonConverterFactory, RxJava2CallAdapterFactory rxJava2CallAdapterFactory) {
         return new Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl("https://raw.githubusercontent.com/SkbkonturMobile/mobile-test-droid/master/json/")
                 .addConverterFactory(gsonConverterFactory)
+                .addCallAdapterFactory(rxJava2CallAdapterFactory)
                 .build();
     }
 
     @Provides
     public GsonConverterFactory gsonConverterFactory() {
         return GsonConverterFactory.create();
+    }
+
+    @Provides
+    public RxJava2CallAdapterFactory rxJava2CallAdapterFactory() {
+        return RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io());
     }
 
     @Provides
@@ -60,11 +70,8 @@ public class NetworkModule {
 
     @Provides
     public HttpLoggingInterceptor httpLoggingInterceptor() {
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Log.d("HttpLoggingInterceptor", message);
-            }
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(message -> {
+            Log.d("HttpLoggingInterceptor", message);
         });
 
         httpLoggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);

@@ -1,5 +1,6 @@
 package ru.kulikovman.skbkonturtest.repository;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -7,9 +8,8 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.kulikovman.skbkonturtest.api.TestApi;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 
@@ -25,96 +25,75 @@ public class DataRepository {
     private boolean sourceTwoStatus;
     private boolean sourceThreeStatus;
 
-    private MutableLiveData<Integer> connectionStatus = new MutableLiveData<>();
+    private MutableLiveData<List<Contact>> result;
+    private MutableLiveData<Integer> connectionStatus;
 
     public DataRepository(TestApi testApi) {
         api = testApi;
+
+        result = new MutableLiveData<>();
+        connectionStatus = new MutableLiveData<>();
     }
 
+    @SuppressLint("CheckResult")
     public LiveData<List<Contact>> getContacts() {
         final List<Contact> contactCollector = new ArrayList<>();
-        final MutableLiveData<List<Contact>> contacts = new MutableLiveData<>();
 
         // Статус соединения по умолчанию
         setDefaultConnectionStatus();
         connectionStatus.setValue(CONNECTION_OK);
 
         // Первая часть контактов
-        api.getSourceOne().enqueue(new Callback<List<Contact>>() {
-            @Override
-            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    addToContactsCollector(contactCollector, response.body());
-                    contacts.setValue(contactCollector);
-
-                    Log.d("myLog", "After source 1: " + contactCollector.size());
-                } else {
+        api.getSourceOne()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(contacts -> {
+                    putContactsToResult(contacts, contactCollector, sourceOneStatus);
+                }, throwable -> {
                     sourceOneStatus = false;
                     updateConnectionStatus();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.d("myLog", "Ошибка при getSourceOne / Throwable: " + t.getMessage());
-                sourceOneStatus = false;
-                updateConnectionStatus();
-            }
-        });
+                    throwable.printStackTrace();
+                });
 
         // Вторая часть контактов
-        api.getSourceTwo().enqueue(new Callback<List<Contact>>() {
-            @Override
-            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    addToContactsCollector(contactCollector, response.body());
-                    contacts.setValue(contactCollector);
-
-                    Log.d("myLog", "After source 2: " + contactCollector.size());
-                } else {
+        api.getSourceTwo()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(contacts -> {
+                    putContactsToResult(contacts, contactCollector, sourceTwoStatus);
+                }, throwable -> {
                     sourceTwoStatus = false;
                     updateConnectionStatus();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.d("myLog", "Ошибка при getSourceTwo / Throwable: " + t.getMessage());
-                sourceTwoStatus = false;
-                updateConnectionStatus();
-            }
-        });
+                    throwable.printStackTrace();
+                });
 
         // Третья часть контактов
-        api.getSourceThree().enqueue(new Callback<List<Contact>>() {
-            @Override
-            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    addToContactsCollector(contactCollector, response.body());
-                    contacts.setValue(contactCollector);
-
-                    Log.d("myLog", "After source 3: " + contactCollector.size());
-                } else {
+        api.getSourceThree()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(contacts -> {
+                    putContactsToResult(contacts, contactCollector, sourceThreeStatus);
+                }, throwable -> {
                     sourceThreeStatus = false;
                     updateConnectionStatus();
-                }
-            }
+                    throwable.printStackTrace();
+                });
 
-            @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.d("myLog", "Ошибка при getSourceThree / Throwable: " + t.getMessage());
-                sourceThreeStatus = false;
-                updateConnectionStatus();
-            }
-        });
-
-        return contacts;
+        return result;
     }
 
-    private void addToContactsCollector(List<Contact> contactCollector, List<Contact> contacts) {
-        for (Contact c : contacts) {
-            contactCollector.add(new Contact(c.getId(), c.getName(), c.getPhone(), c.getHeight(),
-                    c.getBiography(), c.getTemperament(), c.getEducationPeriod()));
+    private void putContactsToResult(List<Contact> contacts, List<Contact> contactCollector, boolean souceStatus) {
+        if (contacts.size() > 0) {
+            // Перекладываем контакты в общий список
+            for (Contact c : contacts) {
+                contactCollector.add(new Contact(c.getId(), c.getName(), c.getPhone(), c.getHeight(),
+                        c.getBiography(), c.getTemperament(), c.getEducationPeriod()));
+            }
+
+            Log.d("myLog", "After next source: " + contactCollector.size());
+
+            // Обновляем возвращаемый список
+            result.setValue(contactCollector);
+        } else {
+            souceStatus = false;
+            updateConnectionStatus();
         }
     }
 
