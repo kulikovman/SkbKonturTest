@@ -136,10 +136,12 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
     }
 
     private void updateContactList() {
-        LiveData<List<Contact>> contactsFromServer = model.getContactsFromServer();
-        contactsFromServer.observe(this, contacts -> {
-            model.updateContacts(contacts);
-        });
+        if (!model.isDataUpdateInProgress()) {
+            LiveData<List<Contact>> contactsFromServer = model.getContactsFromServer();
+            contactsFromServer.observe(this, contacts -> {
+                model.updateContacts(contacts);
+            });
+        }
     }
 
     @Override

@@ -22,6 +22,8 @@ public class DataRepository {
     private MutableLiveData<List<Contact>> result;
     private MutableLiveData<Integer> connectionStatus;
 
+    private boolean isUpdateInProgress;
+
     public DataRepository(TestApi testApi) {
         api = testApi;
 
@@ -31,8 +33,9 @@ public class DataRepository {
 
     @SuppressLint("CheckResult")
     public LiveData<List<Contact>> getContacts() {
-        // Статус соединения по умолчанию
+        // Статусы соединения и обновления по умолчанию
         connectionStatus.setValue(CONNECTION_OK);
+        isUpdateInProgress = true;
 
         // Получение и обработка контактов
         Observable.merge(api.getSourceOne(), api.getSourceTwo(), api.getSourceThree())
@@ -41,9 +44,12 @@ public class DataRepository {
                 .doOnNext(Contact::createClearPhone) // Добавление чистого номера (только цифры)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(contacts -> result.setValue(contacts),
-                        throwable -> {
+                .subscribe(contacts -> {
+                            result.setValue(contacts);
+                            isUpdateInProgress = false;
+                        }, throwable -> {
                             connectionStatus.setValue(NO_CONNECTION);
+                            isUpdateInProgress = false;
                             throwable.printStackTrace();
                         });
 
@@ -52,5 +58,9 @@ public class DataRepository {
 
     public LiveData<Integer> getConnectionStatus() {
         return connectionStatus;
+    }
+
+    public boolean isUpdateInProgress() {
+        return isUpdateInProgress;
     }
 }

@@ -71,4 +71,8 @@ public class ContactViewModel extends ViewModel {
     public LiveData<Integer> getConnectionStatus() {
         return data.getConnectionStatus();
     }
+
+    public boolean isDataUpdateInProgress() {
+        return data.isUpdateInProgress();
+    }
 }
