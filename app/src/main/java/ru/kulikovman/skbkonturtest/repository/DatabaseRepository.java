@@ -4,6 +4,8 @@ package ru.kulikovman.skbkonturtest.repository;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import io.reactivex.Completable;
+import io.reactivex.schedulers.Schedulers;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.db.dao.ContactDao;
@@ -33,6 +35,8 @@ public class DatabaseRepository {
     }
 
     public void saveContactList(List<Contact> contacts) {
-        contactDao.insert(contacts);
+        Completable.fromAction(() -> contactDao.insert(contacts))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 }

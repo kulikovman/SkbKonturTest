@@ -17,7 +17,6 @@ public class DatabaseModule {
     @Provides
     AppDatabase appDatabase(Context context) {
         return Room.databaseBuilder(context, AppDatabase.class, "database")
-                .allowMainThreadQueries() // разрешает операции в основном потоке
                 .fallbackToDestructiveMigration() // обнуляет базу, если нет подходящей миграции
                 //.addMigrations(AppDatabase.MIGRATION_4_5, AppDatabase.MIGRATION_5_6)
                 .build();
