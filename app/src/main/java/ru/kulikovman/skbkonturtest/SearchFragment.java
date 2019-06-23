@@ -1,8 +1,8 @@
 package ru.kulikovman.skbkonturtest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.rxbinding3.widget.RxTextView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,12 +27,12 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.kulikovman.skbkonturtest.data.model.Contact;
 import ru.kulikovman.skbkonturtest.data.model.SimpleContact;
 import ru.kulikovman.skbkonturtest.databinding.FragmentSearchBinding;
 import ru.kulikovman.skbkonturtest.repository.DataRepository;
 import ru.kulikovman.skbkonturtest.ui.adapter.ContactAdapter;
-import ru.kulikovman.skbkonturtest.util.sweet.SweetTextWatcher;
 
 public class SearchFragment extends Fragment implements ContactAdapter.ContactClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -59,25 +61,21 @@ public class SearchFragment extends Fragment implements ContactAdapter.ContactCl
         initUI();
     }
 
+    @SuppressLint("CheckResult")
     private void initUI() {
         // Инициализация поискового поля
-        binding.search.addTextChangedListener(new SweetTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && !TextUtils.isEmpty(s.toString())) {
-                    Log.d("myLog", "Поисковый запрос: " + s.toString());
+        RxTextView.textChanges(binding.search)
+                .debounce(800, TimeUnit.MILLISECONDS)
+                .map(CharSequence::toString)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(query -> {
+                    Log.d("myLog", "Поисковый запрос: " + query);
+                    showClearButton(!TextUtils.isEmpty(query));
+                    model.saveSearchQuery(query);
 
-                    model.saveSearchQuery(s.toString());
-                    showClearButton(true);
-                } else {
-                    model.saveSearchQuery(null);
-                    showClearButton(false);
-                }
-
-                // Загружаем контакты
-                loadContactList();
-            }
-        });
+                    // Загружаем контакты
+                    loadContactList();
+                }, Throwable::printStackTrace);
 
         binding.search.setText(model.getSearchQuery());
 
